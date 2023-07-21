@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>𝘭𝘪𝘣𝘳𝘢𝘳𝘺 𝘮𝘢𝘯𝘢𝘨𝘦𝘮𝘦𝘯𝘵</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 09;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 4ch;
+    }
+
+    input[type="text"], select {
+      margin-bottom: 10px;
+      padding: 15;
+    }
+    <img src="path/to/image.jpg" alt="Library Image" width="300" height="200" class="library-image" style="border: 1px solid black;">
+
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .pagination {
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      background-color: #60a312bb;
+      border: none;
+      color: rgb(128, 50, 50);
+      padding: 8px 16px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 18px;
+      margin: 4px 2px;
+      cursor: arrow;
+      border-radius: 4px;
+    }
+
+    .pagination button:hover {
+      background-color: #45a049;
+    }
+
+    .pagination button:disabled {
+      background-color: #17b6a1;
+      cursor: not-allowed;
+    }
+
+    /* Fancy Animation */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    tbody tr {
+      animation: slideIn 0.3s ease-in-out;
+    }
+
+    /* Colorful Table */
+    tbody tr:nth-child(odd) {
+      background-color: #4b3131;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #eaf7f7;
+    }
+  </style>
+</head>
+<body>
+  <h1>𝘭𝘪𝘣𝘳𝘢𝘳𝘺 𝘮𝘢𝘯𝘢𝘨𝘦𝘮𝘦𝘯𝘵</h1>
+  <label for="titleFilter">Title:</label>
+  <input type="text" id="titleFilter">
+  <br>
+  <label for="authorFilter">Author:</label>
+  <input type="text" id="authorFilter">
+  <br>
+  <label for="subjectFilter">Subject:</label>
+  <input type="text" id="subjectFilter">
+  <br>
+  <label for="publishDateFilter">Publish Date:</label>
+  <input type="text" id="publishDateFilter">
+  <br>
+  <button onclick="filterBooks()">Filter</button>
+  <br>
+  <table id="booksTable">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Subject</th>
+        <th>Publish Date</th>
+      </tr>
+    </thead>
+    <tbody id="booksTableBody"></tbody>
+  </table>
+  <div class="pagination">
+    <button id="prevPageBtn" disabled onclick="prevPage()">Previous</button>
+    <span id="currentPage"></span>
+    <button id="nextPageBtn" disabled onclick="nextPage()">Next</button>
+  </div>
+
+  <script>
+    var books = [
+      // Sample book data
+      { title: "Essentialism", author: "marcus auureliys", subject: "philosophy", publishDate: "2022-01-01" },
+      { title: "Republic", author: "Will Durant", subject: "", publishDate: "2022-02-01" },
+      { title:"anti  athism", author: "james pakour",subject:"divotinla", publishdate: "2022-10-22"},
+      { title: "The Daily Stoic", author: "Will Durant", subject: "devotional", publishDate: "2022-04-01" },
+      { title: "The Story of Philosophy", author: "marcus auureliys", subject: "science", publishDate: "2022-05-01" },
+      { title: "The Republic ", author: "Randy Pausch ", subject: "philosophy", publishDate: "2022-06-01" },
+      { title: "Discourses", author: "Will Durant", subject: "science", publishDate: "2022-07-01" },
+      { title: "Discourses", author: "marcus auureliys", subject: "devotional", publishDate: "2022-08-01" },
+      { title: ". Meditations on First Philosophy", author: "Randy Pausch ", subject: "philosophy", publishDate: "2022-09-01" },
+      { title: "A Guide to the Good Life", author: "Will Durant", subject: "science", publishDate: "2022-10-01" },
+      { title: "On the Shortness of Life", author: "marcus auureliys", subject: "devotional", publishDate: "2022-11-01" },
+      { title: "How to Think Like a Roman Emperor", author: "Randy Pausch ", subject: "philosophy", publishDate: "2022-12-01" },
+      { title: "the Obstacle Is the Way", author: "Will Durant", subject: "science", publishDate: "2023-01-01" },
+      { title: "The Bhagavad Gita", author: "marcus auureliys", subject: "devotional", publishDate: "2023-02-01" },
+      { title: "The Art of War", author: "Randy Pausch ", subject: "philosophy", publishDate: "2023-03-01" },
+      { title: "The Tao Te Ching", author: "Will Durant", subject: "science", publishDate: "2023-04-01" },
+      { title: "Lives of the StoicsLives of the Stoics", author: "marcus auureliys", subject: "devotional", publishDate: "2023-05-01" },
+      { title: " Plato at the Googleplex", author: "Randy Pausch ", subject: "philosophy", publishDate: "2023-06-01" },
+      { title: "The Nicomachean Ethics", author: "Will Durant", subject: "science", publishDate: "2023-07-01" },
+      { title: "The Ethics of Ambiguity", author: "marcus auureliys", subject: "devotional", publishDate: "2023-08-01" }
+    ];
+
+    var currentPage = 1;
+    var pageSize = 10;
+    var totalPages = Math.ceil(books.length / pageSize);
+
+    function displayBooks() {
+      var tableBody = document.getElementById("booksTableBody");
+      tableBody.innerHTML = 
+      var startIndex = (currentPage - 1) * pageSize;
+      var endIndex = Math.min(startIndex + pageSize, books.length);
+
+      for (var i = startIndex; i < endIndex; i++) {
+        var book = books[i];
+        var row = tableBody.insertRow();
+
+        var titleCell = row.insertCell();
+        titleCell.textContent = book.title;
+
+        var authorCell = row.insertCell();
+        authorCell.textContent = book.author;
+
+        var subjectCell = row.insertCell();
+        subjectCell.textContent = book.subject;
+
+        var publishDateCell = row.insertCell();
+        publishDateCell.textContent = book.publishDate;
+      }
+
+      document.getElementById("currentPage").textContent = "Page " + currentPage + " of " + totalPages;
+      document.getElementById("prevPageBtn").disabled = (currentPage === 1);
+      document.getElementById("nextPageBtn").disabled = (currentPage === totalPages);
+    }
+
+    function filterBooks() {
+      var titleFilter = document.getElementById("titleFilter").value.toLowerCase();
+      var authorFilter = document.getElementById("authorFilter").value.toLowerCase();
+      var subjectFilter = document.getElementById("subjectFilter").value.toLowerCase();
+      var publishDateFilter = document.getElementById("publishDateFilter").value.toLowerCase();
+
+      var filteredBooks = books.filter(function(book) {
+        return book.title.toLowerCase().includes(titleFilter) &&
+               book.author.toLowerCase().includes(authorFilter) &&
+               book.subject.toLowerCase().includes(subjectFilter) &&
+               book.publishDate.toLowerCase().includes(publishDateFilter);
+      });
+
+      currentPage = 1;
+      totalPages = Math.ceil(filteredBooks.length / pageSize);
+
+      displayBooks(filteredBooks);
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        displayBooks();
+      }
+    }
+
+    function nextPage() {
+      if (currentPage < totalPages) {
+        currentPage++;
+        displayBooks();
+      }
+    }
+
+    displayBooks();
+  </script>
+</body>
+</html>
